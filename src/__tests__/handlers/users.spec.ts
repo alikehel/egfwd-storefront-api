@@ -136,4 +136,10 @@ describe("user handlers", () => {
             }
         });
     });
+
+    // app.get("/signout", signout);
+    fit("should get 302 redirect from GET /signout", async () => {
+        const res = await req.get("/signout");
+        expect(res.status).toEqual(302);
+    });
 });

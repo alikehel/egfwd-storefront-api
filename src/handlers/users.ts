@@ -25,7 +25,8 @@ const create = async (req: Request, res: Response) => {
         const user = req.body;
         const result = await userStore.create(user);
         const token = jwt.sign(user.username, SECRET as string);
-        res.cookie(user.username, token);
+        res.cookie("jwt", token);
+        // res.setHeader("Authorization", `Bearer ${token}`);
         // console.log(user);
         res.json({ result: result, token: token });
     } catch (err) {
@@ -40,7 +41,8 @@ const authenticate = async (req: Request, res: Response) => {
         const user = req.body;
         const result = await userStore.authenticate(user);
         const token = jwt.sign(user.username, SECRET as string);
-        res.cookie(user.username, token);
+        res.cookie("jwt", token);
+        // res.setHeader("Authorization", `Bearer ${token}`);
         // console.log(user);
         res.json({ result, token });
     } catch (err) {
@@ -63,11 +65,25 @@ const showUser = async (req: Request, res: Response) => {
     }
 };
 
+const signout = (req: Request, res: Response) => {
+    try {
+        if (req.cookies.jwt) {
+            res.clearCookie("jwt").status(302).redirect("/");
+        } else {
+            res.status(302).redirect("/");
+        }
+    } catch (err) {
+        res.status(400).json({ err });
+        // console.log(`error signing out. ${err}`);
+    }
+};
+
 const usersRoutes = (app: express.Application) => {
     app.get("/users", index);
     app.post("/users", create);
     app.post("/users/auth", authenticate);
     app.get("/users/:username", showUser);
+    app.get("/signout", signout);
 };
 
 export default usersRoutes;
