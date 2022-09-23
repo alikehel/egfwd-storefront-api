@@ -48,6 +48,17 @@ describe("user model", () => {
         }
     });
 
+    afterAll(async () => {
+        try {
+            const conn = await client.connect();
+            const sql = "TRUNCATE TABLE users RESTART IDENTITY CASCADE";
+            await conn.query(sql);
+            conn.release();
+        } catch (err) {
+            throw new Error(`cannot TRUNCATE users table. ${err}`);
+        }
+    });
+
     it("should get all users", async () => {
         expect(await userStore.index()).toEqual([
             {
