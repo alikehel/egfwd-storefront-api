@@ -5,6 +5,7 @@ import * as dotenv from "dotenv";
 import cors from "cors";
 import usersRoutes from "./handlers/users";
 import productsRoutes from "./handlers/products";
+import ordersRoutes from "./handlers/orders";
 import dashboardRoutes from "./handlers/services/dashboard";
 import cookieParser from "cookie-parser";
 
@@ -27,6 +28,7 @@ app.get("/", (_req: Request, res: Response) => {
 
 usersRoutes(app);
 productsRoutes(app);
+ordersRoutes(app);
 dashboardRoutes(app);
 
 app.listen(PORT, () => {

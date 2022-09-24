@@ -1,59 +1,44 @@
-// import express, { Request, Response } from "express";
-// import { ProductStore } from "../models/product";
-// import jwt from "jsonwebtoken";
-// import dotenv from "dotenv";
-// import { isAutherized } from "../middlewares/isAutherized";
+import { DashboardStore } from "../models/services/dashboard";
+import { OrderStore } from "../models/order";
+import { isAutherized } from "../middlewares/isAutherized";
+const dashboardStore = new DashboardStore();
+const orderStore = new OrderStore();
+import express, { Request, Response } from "express";
 
-// const productStore = new ProductStore();
+const index = async (req: Request, res: Response) => {
+    try {
+        const result = await orderStore.index();
+        res.json({ result: result });
+    } catch (err) {
+        res.status(400).json(err);
+    }
+};
 
-// dotenv.config();
+const create = async (req: Request, res: Response) => {
+    const { userid } = req.params;
+    try {
+        const result = await orderStore.create(parseInt(userid));
+        res.json({ result: result });
+    } catch (err) {
+        res.status(400).json({
+            err: err
+        });
+    }
+};
 
-// const SECRET = process.env.SECRET;
+const getOrder = async (req: Request, res: Response) => {
+    try {
+        const { orderid } = req.params;
+        const result = await orderStore.getOrder(parseInt(orderid));
+        res.json({ result: result });
+    } catch (err) {
+        res.status(400).json(err);
+    }
+};
+const ordersRoutes = (app: express.Application) => {
+    app.get("/orders", index);
+    app.post("/users/:userid/orders", isAutherized, create);
+    app.get("/orders/:orderid", getOrder);
+};
 
-// const index = async (_req: Request, res: Response) => {
-//     try {
-//         const result = await productStore.index();
-//         res.json({ result: result });
-//     } catch (err) {
-//         // console.log("🚀 ~ file: users.ts ~ line 17 ~ index ~ err", err);
-//         res.status(400);
-//         res.json({ err });
-//     }
-// };
-
-// const create = async (req: Request, res: Response) => {
-//     try {
-//         const product = req.body;
-//         const result = await productStore.create(product);
-//         // const token = jwt.sign(user.username, SECRET as string);
-//         // res.cookie(user.username, token);
-//         // console.log(user);
-//         // res.json({ result: result, token: token });
-//         res.json({ result: result });
-//     } catch (err) {
-//         // console.log("🚀 ~ file: users.ts ~ line 31 ~ create ~ err", err);
-//         res.status(400);
-//         res.json({ err });
-//     }
-// };
-
-// const showProduct = async (req: Request, res: Response) => {
-//     try {
-//         const id = parseInt(req.params.id);
-//         const result = await productStore.showProduct(id);
-//         // console.log(user);
-//         res.json({ result });
-//     } catch (err) {
-//         // console.log("🚀 ~ file: users.ts ~ line 59 ~ showUser ~ err", err);
-//         res.status(400);
-//         res.json({ err });
-//     }
-// };
-
-// const productsRoutes = (app: express.Application) => {
-//     app.get("/products", index);
-//     app.post("/products", isAutherized, create);
-//     app.get("/products/:id", showProduct);
-// };
-
-// export default productsRoutes;
+export default ordersRoutes;

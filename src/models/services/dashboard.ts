@@ -12,9 +12,9 @@ const SECRET = process.env.SECRET;
 export class DashboardStore {
     // get 'users/:id/orders/:id'
     async getUserOrderProducts(
-        userid: number,
+        // userid: number,
         orderid: number
-    ): Promise<Order> {
+    ): Promise<{ orderid: number; name: string }[]> {
         try {
             const conn = await client.connect();
             const sql = `
@@ -26,7 +26,7 @@ export class DashboardStore {
             `;
             const result = await conn.query(sql, [orderid]);
             conn.release();
-            return result.rows[0];
+            return result.rows;
         } catch (err) {
             throw new Error(`cannot get user current order. ${err}`);
         }
@@ -34,10 +34,15 @@ export class DashboardStore {
 
     // post 'users/:id/orders/:id/'
     async addProductToOrder(
-        userid: number,
+        // userid: number,
         orderid: number,
         productid: number
-    ): Promise<Order> {
+    ): Promise<{
+        id?: number;
+        orderid: number;
+        productid: number;
+        quantity: number;
+    }> {
         try {
             const conn = await client.connect();
             const sql =

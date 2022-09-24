@@ -5,21 +5,27 @@ const dashboardStore = new DashboardStore();
 const orderStore = new OrderStore();
 import express, { Request, Response } from "express";
 
-const index = async (req: Request, res: Response) => {
-    try {
-        res.json(await orderStore.index());
-    } catch (err) {
-        res.status(400).json(err);
-    }
-};
+const getUserOrderProducts = async (req: Request, res: Response) => {
+    const { orderid } = req.params;
+    // try {
+    //     const isOrderExist = await orderStore.getOrder(parseInt(orderid));
 
-const getOrder = async (req: Request, res: Response) => {
+    //     if (isOrderExist == undefined) {
+    //         orderStore.create(parseInt(userid));
+    //     }
+    // } catch (err) {
+    //     res.json({ err });
+    // }
     try {
-        const { orderid } = req.params;
-        const result = await orderStore.getOrder(parseInt(orderid));
-        res.json(result);
+        const result = await dashboardStore.getUserOrderProducts(
+            // parseInt(userid),
+            parseInt(orderid)
+        );
+        res.json({ result: result });
     } catch (err) {
-        res.status(400).json(err);
+        res.status(400).json({
+            err: err
+        });
     }
 };
 
@@ -36,7 +42,6 @@ const addProductToOrder = async (req: Request, res: Response) => {
     }
     try {
         const result = await dashboardStore.addProductToOrder(
-            parseInt(userid),
             parseInt(orderid),
             req.body.productid
         );
@@ -49,8 +54,13 @@ const addProductToOrder = async (req: Request, res: Response) => {
 };
 
 const dashboardRoutes = (app: express.Application) => {
-    app.get("/orders", index);
-    app.get("/orders/:orderid", getOrder);
+    // app.get("/orders", index);
+    // app.get("/orders/:orderid", getOrder);
+    app.get(
+        "/users/:userid/orders/:orderid",
+        isAutherized,
+        getUserOrderProducts
+    );
     app.post("/users/:userid/orders/:orderid", isAutherized, addProductToOrder);
 };
 

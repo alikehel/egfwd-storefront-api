@@ -15,7 +15,7 @@
         "jasmine": "jasmine",
         "migrate:up": "db-migrate up",
         "migrate:reset": "set ENV=test& db-migrate reset --env test",
-        "createdatabse":"db-migrate db:create storefront && db-migrate db:create storefront_test"
+        "createdatabase": "db-migrate db:create storefront && db-migrate db:create storefront_test"
     },
     "keywords": [],
     "author": "",
