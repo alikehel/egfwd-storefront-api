@@ -67,7 +67,7 @@ describe("user handlers", () => {
     });
 
     // app.get("/users", index);
-    fit("should get 200 ok from GET /users", async () => {
+    it("should get 200 ok from GET /users", async () => {
         const res = await req.get("/users");
         expect(res.status).toEqual(200);
         expect(res.body).toEqual({
@@ -84,7 +84,7 @@ describe("user handlers", () => {
     });
 
     // app.post("/users", create);
-    fit("should get 200 ok from POST /users", async () => {
+    it("should get 200 ok from POST /users", async () => {
         const res = await req
             .post("/users")
             .set("content-type", "application/json")
@@ -110,7 +110,7 @@ describe("user handlers", () => {
     });
 
     // app.post("/users/auth", authenticate);
-    fit("should get 200 ok from POST /users/auth", async () => {
+    it("should get 200 ok from POST /users/auth", async () => {
         const res = await req
             .post("/users/auth")
             .set("content-type", "application/json")
@@ -123,7 +123,7 @@ describe("user handlers", () => {
     });
 
     // app.get("/users/:username", showUser);
-    fit("should get 200 ok from GET /users/:username", async () => {
+    it("should get 200 ok from GET /users/:username", async () => {
         const res = await req.get("/users/ke7el1username");
         expect(res.status).toEqual(200);
         expect(res.body).toEqual({
@@ -138,7 +138,7 @@ describe("user handlers", () => {
     });
 
     // app.get("/signout", signout);
-    fit("should get 302 redirect from GET /signout", async () => {
+    it("should get 302 redirect from GET /signout", async () => {
         const res = await req.get("/signout");
         expect(res.status).toEqual(302);
     });
