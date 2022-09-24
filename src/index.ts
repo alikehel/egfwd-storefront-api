@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
-import morgan from "morgan";
+// import morgan from "morgan";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import usersRoutes from "./handlers/users";

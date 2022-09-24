@@ -1,5 +1,3 @@
-import express, { Request, Response } from "express";
-import { UserStore } from "../../models/user";
 import usersRoutes from "../../handlers/users";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -11,7 +9,6 @@ import bcrypt from "bcrypt";
 
 dotenv.config();
 
-const userStore = new UserStore();
 const SECRET = process.env.SECRET;
 const req = supertest(app);
 

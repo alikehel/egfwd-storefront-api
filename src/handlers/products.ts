@@ -1,14 +1,11 @@
 import express, { Request, Response } from "express";
 import { ProductStore } from "../models/product";
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { isAutherized } from "../middlewares/isAutherized";
 
 const productStore = new ProductStore();
 
 dotenv.config();
-
-const SECRET = process.env.SECRET;
 
 const index = async (_req: Request, res: Response) => {
     try {
@@ -25,10 +22,6 @@ const create = async (req: Request, res: Response) => {
     try {
         const product = req.body;
         const result = await productStore.create(product);
-        // const token = jwt.sign(user.username, SECRET as string);
-        // res.cookie(user.username, token);
-        // console.log(user);
-        // res.json({ result: result, token: token });
         res.json({ result: result });
     } catch (err) {
         // console.log("🚀 ~ file: users.ts ~ line 31 ~ create ~ err", err);

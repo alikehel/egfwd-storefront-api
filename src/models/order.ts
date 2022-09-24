@@ -1,11 +1,8 @@
 import client from "../database/database";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { Order } from "../types/Order";
 
 dotenv.config();
-
-const SECRET = process.env.SECRET;
 
 //CRUD
 export class OrderStore {

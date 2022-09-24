@@ -7,15 +7,6 @@ import express, { Request, Response } from "express";
 
 const getUserOrderProducts = async (req: Request, res: Response) => {
     const { orderid } = req.params;
-    // try {
-    //     const isOrderExist = await orderStore.getOrder(parseInt(orderid));
-
-    //     if (isOrderExist == undefined) {
-    //         orderStore.create(parseInt(userid));
-    //     }
-    // } catch (err) {
-    //     res.json({ err });
-    // }
     try {
         const result = await dashboardStore.getUserOrderProducts(
             // parseInt(userid),

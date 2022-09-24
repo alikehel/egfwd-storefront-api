@@ -49,10 +49,6 @@ export class UserStore {
             const sql = "SELECT password FROM users WHERE username=$1";
             const result = await conn.query(sql, [user.username]);
             const password = result.rows[0].password;
-            // console.log(
-            //     '🚀 ~ file: user.ts ~ line 52 ~ UserStore ~ authenticate ~ password',
-            //     password
-            // );
             const isAuthenticated = bcrypt.compareSync(
                 user.password + (SECRET as string),
                 password

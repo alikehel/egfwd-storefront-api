@@ -1,7 +1,5 @@
 import client from "../../database/database";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
-import { Product } from "../../types/Product";
 import { User } from "../../types/User";
 import { Order } from "../../types/Order";
 import { OrderStore } from "../../models/order";
@@ -9,7 +7,6 @@ import { UserStore } from "../../models/user";
 
 dotenv.config();
 
-const SECRET = process.env.SECRET;
 // const productStore = new ProductStore();
 const userStore = new UserStore();
 const orderStore = new OrderStore();
@@ -32,24 +29,6 @@ const users: User[] = [
         password: "ke7el3pass",
         firstname: "ali3",
         lastname: "kehel3"
-    }
-];
-
-const products: Product[] = [
-    {
-        name: "samsung",
-        price: 5000,
-        category: "phones"
-    },
-    {
-        name: "iphone",
-        price: 15000,
-        category: "phones"
-    },
-    {
-        name: "acer",
-        price: 30000,
-        category: "laptops"
     }
 ];
 

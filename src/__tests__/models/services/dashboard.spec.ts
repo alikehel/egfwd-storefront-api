@@ -1,9 +1,7 @@
 import client from "../../../database/database";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { Product } from "../../../types/Product";
 import { User } from "../../../types/User";
-import { Order } from "../../../types/Order";
 import { OrderStore } from "../../../models/order";
 import { UserStore } from "../../../models/user";
 import { DashboardStore } from "../../../models/services/dashboard";
@@ -11,7 +9,6 @@ import { ProductStore } from "../../../models/product";
 
 dotenv.config();
 
-const SECRET = process.env.SECRET;
 const productStore = new ProductStore();
 const userStore = new UserStore();
 const orderStore = new OrderStore();
@@ -56,21 +53,6 @@ const products: Product[] = [
     }
 ];
 
-const orders: Order[] = [
-    {
-        userid: 1,
-        status: "active"
-    },
-    {
-        userid: 2,
-        status: "active"
-    },
-    {
-        userid: 3,
-        status: "active"
-    }
-];
-
 describe("dashboard model", () => {
     beforeAll(async () => {
         try {
@@ -82,16 +64,8 @@ describe("dashboard model", () => {
             const conn = await client.connect();
             const sql =
                 "INSERT INTO orders_products (orderid,productid,quantity) VALUES ($1,$2,$3)";
-            // const sql1 = "INSERT INTO users (userid,status) VALUES ($1,$2)";
-            // const sql2 = "INSERT INTO orders (userid,status) VALUES ($1,$2)";
-            // const sql3 = "INSERT INTO products (userid,status) VALUES ($1,$2)";
-            // const sql4 =
-            //     "INSERT INTO orders_products (userid,status) VALUES ($1,$2)";
             await conn.query(sql, [1, 1, 1]);
-            // await conn.query(sql1, [id, orders[0].status]);
-            // await conn.query(sql2, [id, orders[0].status]);
-            // await conn.query(sql3, [id, orders[0].status]);
-            // await conn.query(sql4, [id, orders[0].status]);
+
             conn.release();
         } catch (err) {
             throw new Error(`cannot create order. ${err}`);

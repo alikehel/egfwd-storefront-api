@@ -1,11 +1,9 @@
-import { DashboardStore } from "../models/services/dashboard";
 import { OrderStore } from "../models/order";
 import { isAutherized } from "../middlewares/isAutherized";
-const dashboardStore = new DashboardStore();
 const orderStore = new OrderStore();
 import express, { Request, Response } from "express";
 
-const index = async (req: Request, res: Response) => {
+const index = async (_req: Request, res: Response) => {
     try {
         const result = await orderStore.index();
         res.json({ result: result });

@@ -1,35 +1,11 @@
 import client from "../../database/database";
-import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { Product } from "../../types/Product";
-import { User } from "../../types/User";
 import { ProductStore } from "../../models/product";
 
 dotenv.config();
 
-const SECRET = process.env.SECRET;
 const productStore = new ProductStore();
-
-const users: User[] = [
-    {
-        username: "ke7el1username",
-        password: "ke7el1pass",
-        firstname: "ali1",
-        lastname: "kehel1"
-    },
-    {
-        username: "ke7el2username",
-        password: "ke7el2pass",
-        firstname: "ali2",
-        lastname: "kehel2"
-    },
-    {
-        username: "ke7el3username",
-        password: "ke7el3pass",
-        firstname: "ali3",
-        lastname: "kehel3"
-    }
-];
 
 const products: Product[] = [
     {
