@@ -3,29 +3,11 @@ import dotenv from "dotenv";
 import supertest from "supertest";
 import app from "../../index";
 import client from "../../database/database";
-import { Product } from "../../types/Product";
+import { users, products } from "../../data/data";
 
 dotenv.config();
 
 const req = supertest(app);
-
-const products: Product[] = [
-    {
-        name: "samsung",
-        price: 5000,
-        category: "phones"
-    },
-    {
-        name: "iphone",
-        price: 15000,
-        category: "phones"
-    },
-    {
-        name: "acer",
-        price: 30000,
-        category: "laptops"
-    }
-];
 
 describe("product handlers", () => {
     beforeAll(async () => {
@@ -72,14 +54,20 @@ describe("product handlers", () => {
 
     // app.post("/products", isAutherized, create);
     it("should get 200 ok from POST /products", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
         const res = await req
             .post("/products")
             .set("content-type", "application/json")
             .send(JSON.stringify(products[1]))
             .set(
-                "Cookie",
-                //jwt for 'ke7el2` + 'THISISSECRET'
-                `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                "Cookie", //jwt for 'ke7el2` + 'THISISSECRET'
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}`
             );
         expect(res.status).toEqual(200);
         expect(res.body).toEqual({
@@ -88,6 +76,44 @@ describe("product handlers", () => {
                 ...products[1]
             }
         });
+    });
+
+    it("should get 400 ERROR from POST /products", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
+        const res = await req
+            .post("/products")
+            .set("content-type", "application/json")
+            .send(JSON.stringify(products[1]))
+            .set(
+                "Cookie", //jwt for 'ke7el2` + 'THISISSECRET'
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}HAHAHAHAHHAAHHAHA`
+            );
+        expect(res.status).toEqual(401);
+    });
+
+    it("should get 400 ERROR from POST /products", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
+        const res = await req
+            .post("/products")
+            .set("content-type", "application/json")
+            .send(JSON.stringify(users[1]))
+            .set(
+                "Cookie", //jwt for 'ke7el2` + 'THISISSECRET'
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}`
+            );
+        expect(res.status).toEqual(400);
     });
 
     // app.get("/products/:id", showProduct);

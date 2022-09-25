@@ -8,11 +8,12 @@ import productsRoutes from "./handlers/products";
 import ordersRoutes from "./handlers/orders";
 import dashboardRoutes from "./handlers/services/dashboard";
 import cookieParser from "cookie-parser";
+import { PORT as processPORT } from "./config/config";
 
 dotenv.config();
 
 const app: express.Application = express();
-const PORT = process.env.PORT || 3000;
+const PORT = processPORT || 3000;
 const address = `http://localhost:${PORT}`;
 
 // app.use(morgan("short"));

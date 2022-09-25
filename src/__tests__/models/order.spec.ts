@@ -1,51 +1,15 @@
 import client from "../../database/database";
 import dotenv from "dotenv";
-import { User } from "../../types/User";
 import { Order } from "../../types/Order";
 import { OrderStore } from "../../models/order";
 import { UserStore } from "../../models/user";
+import { users, orders } from "../../data/data";
 
 dotenv.config();
 
 // const productStore = new ProductStore();
 const userStore = new UserStore();
 const orderStore = new OrderStore();
-
-const users: User[] = [
-    {
-        username: "ke7el1username",
-        password: "ke7el1pass",
-        firstname: "ali1",
-        lastname: "kehel1"
-    },
-    {
-        username: "ke7el2username",
-        password: "ke7el2pass",
-        firstname: "ali2",
-        lastname: "kehel2"
-    },
-    {
-        username: "ke7el3username",
-        password: "ke7el3pass",
-        firstname: "ali3",
-        lastname: "kehel3"
-    }
-];
-
-const orders: Order[] = [
-    {
-        userid: 1,
-        status: "active"
-    },
-    {
-        userid: 2,
-        status: "active"
-    },
-    {
-        userid: 3,
-        status: "active"
-    }
-];
 
 describe("order model", () => {
     beforeAll(async () => {

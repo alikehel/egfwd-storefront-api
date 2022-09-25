@@ -4,10 +4,9 @@ import dotenv from "dotenv";
 import supertest from "supertest";
 import app from "../../../index";
 import client from "../../../database/database";
-import { User } from "../../../types/User";
-import { Product } from "../../../types/Product";
 import dashboardRoutes from "../../../handlers/services/dashboard";
 import { OrderStore } from "../../../models/order";
+import { users, products } from "../../../data/data";
 
 dotenv.config();
 
@@ -15,45 +14,6 @@ const userStore = new UserStore();
 const productStore = new ProductStore();
 const orderStore = new OrderStore();
 const req = supertest(app);
-
-const users: User[] = [
-    {
-        username: "ke7el1username",
-        password: "ke7el1pass",
-        firstname: "ali1",
-        lastname: "kehel1"
-    },
-    {
-        username: "ke7el2username",
-        password: "ke7el2pass",
-        firstname: "ali2",
-        lastname: "kehel2"
-    },
-    {
-        username: "ke7el3username",
-        password: "ke7el3pass",
-        firstname: "ali3",
-        lastname: "kehel3"
-    }
-];
-
-const products: Product[] = [
-    {
-        name: "samsung",
-        price: 5000,
-        category: "phones"
-    },
-    {
-        name: "iphone",
-        price: 15000,
-        category: "phones"
-    },
-    {
-        name: "acer",
-        price: 30000,
-        category: "laptops"
-    }
-];
 
 describe("dashboard handlers", () => {
     beforeAll(async () => {
@@ -89,6 +49,12 @@ describe("dashboard handlers", () => {
 
     // app.post("/users/:userid/orders/:orderid", isAutherized, addProductToOrder);
     it("should get 200 ok from POST /users/:userid/orders/:orderid", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
         const res = await req
             .post("/users/1/orders/1")
             .set("content-type", "application/json")
@@ -96,7 +62,8 @@ describe("dashboard handlers", () => {
             .set(
                 "Cookie",
                 //jwt for 'ke7el2` + 'THISISSECRET'
-                `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}`
             );
         expect(res.status).toEqual(200);
         expect(res.body).toEqual({
@@ -109,14 +76,61 @@ describe("dashboard handlers", () => {
         });
     });
 
+    it("should get 400 ERROR from POST /users/:userid/orders/:orderid", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
+        const res = await req
+            .post("/users/1/orders/1")
+            .set("content-type", "application/json")
+            .send({ productid: 2 })
+            .set(
+                "Cookie",
+                //jwt for 'ke7el2` + 'THISISSECRET'
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}HAHAHAH`
+            );
+        expect(res.status).toEqual(401);
+    });
+
+    it("should get 400 ERROR from POST /users/:userid/orders/:orderid", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
+        const res = await req
+            .post("/users/1/orders/1")
+            .set("content-type", "application/json")
+            .send({ productid: -5 })
+            .set(
+                "Cookie",
+                //jwt for 'ke7el2` + 'THISISSECRET'
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}`
+            );
+        expect(res.status).toEqual(400);
+    });
+
     it("should get 200 ok from GET /users/:userid/orders/:orderid", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
         const res = await req
             .get("/users/1/orders/1")
             .set("content-type", "application/json")
             .set(
                 "Cookie",
                 //jwt for 'ke7el2` + 'THISISSECRET'
-                `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+                `jwt=${token}`
             );
         expect(res.status).toEqual(200);
         expect(res.body).toEqual({

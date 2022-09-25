@@ -1,5 +1,6 @@
 import client from "../../database/database";
 import dotenv from "dotenv";
+import { dashboardQueries } from "../../database/queries";
 
 dotenv.config();
 
@@ -12,14 +13,9 @@ export class DashboardStore {
     ): Promise<{ orderid: number; name: string }[]> {
         try {
             const conn = await client.connect();
-            const sql = `
-                SELECT orderid, name
-                FROM products
-                INNER JOIN orders_products
-                on (products.id = orders_products.productid)
-                WHERE orderid = $1;
-            `;
-            const result = await conn.query(sql, [orderid]);
+            const result = await conn.query(dashboardQueries.getUserProducts, [
+                orderid
+            ]);
             conn.release();
             return result.rows;
         } catch (err) {
@@ -40,9 +36,10 @@ export class DashboardStore {
     }> {
         try {
             const conn = await client.connect();
-            const sql =
-                "INSERT INTO orders_products (orderid, productid, quantity) VALUES ($1, $2, $3) RETURNING *";
-            const result = await conn.query(sql, [orderid, productid, 1]);
+            const result = await conn.query(
+                dashboardQueries.addProductToOrder,
+                [orderid, productid, 1]
+            );
             conn.release();
             return result.rows[0];
         } catch (err) {

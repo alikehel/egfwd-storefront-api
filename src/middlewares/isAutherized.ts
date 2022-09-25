@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { SECRET } from "../config/config";
 
 export const isAutherized = async (
     req: Request,
@@ -8,7 +9,7 @@ export const isAutherized = async (
 ) => {
     try {
         const jwtcookie = req.cookies.jwt;
-        jwt.verify(jwtcookie as string, process.env.SECRET as jwt.Secret);
+        jwt.verify(jwtcookie as string, SECRET as jwt.Secret);
         next();
     } catch (err) {
         res.status(401);

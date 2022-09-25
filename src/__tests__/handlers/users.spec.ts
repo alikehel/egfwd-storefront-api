@@ -4,34 +4,13 @@ import dotenv from "dotenv";
 import supertest from "supertest";
 import app from "../../index";
 import client from "../../database/database";
-import { User } from "../../types/User";
+import { products, users } from "../../data/data";
+import { SECRET } from "../../config/config";
 import bcrypt from "bcrypt";
 
 dotenv.config();
 
-const SECRET = process.env.SECRET;
 const req = supertest(app);
-
-const users: User[] = [
-    {
-        username: "ke7el1username",
-        password: "ke7el1pass",
-        firstname: "ali1",
-        lastname: "kehel1"
-    },
-    {
-        username: "ke7el2username",
-        password: "ke7el2pass",
-        firstname: "ali2",
-        lastname: "kehel2"
-    },
-    {
-        username: "ke7el3username",
-        password: "ke7el3pass",
-        firstname: "ali3",
-        lastname: "kehel3"
-    }
-];
 
 describe("user handlers", () => {
     beforeAll(async () => {
@@ -106,6 +85,15 @@ describe("user handlers", () => {
         });
     });
 
+    it("should get 400 ERROR from POST /users", async () => {
+        const res = await req
+            .post("/users")
+            .set("content-type", "application/json")
+            .send(JSON.stringify(products[1]));
+        // const isPasswordTrue = true;
+        expect(res.status).toEqual(400);
+    });
+
     // app.post("/users/auth", authenticate);
     it("should get 200 ok from POST /users/auth", async () => {
         const res = await req
@@ -117,6 +105,22 @@ describe("user handlers", () => {
             result: true,
             token: jwt.sign(users[1].username, SECRET as string)
         });
+    });
+
+    it("should get 400 ERROR from POST /users/auth", async () => {
+        const res = await req
+            .post("/users/auth")
+            .set("content-type", "application/json")
+            .send(JSON.stringify(products[1]));
+        expect(res.status).toEqual(400);
+    });
+
+    it("should get 400 ERROR from POST /users/auth", async () => {
+        const res = await req
+            .post("/users/auth")
+            .set("content-type", "application/json")
+            .send(JSON.stringify(users[2]));
+        expect(res.status).toEqual(400);
     });
 
     // app.get("/users/:username", showUser);

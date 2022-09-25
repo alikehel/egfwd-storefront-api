@@ -1,6 +1,7 @@
 import client from "../database/database";
 import dotenv from "dotenv";
 import { Order } from "../types/Order";
+import { orderQueries } from "../database/queries";
 
 dotenv.config();
 
@@ -9,8 +10,7 @@ export class OrderStore {
     async index(): Promise<Order[]> {
         try {
             const conn = await client.connect();
-            const sql = "SELECT * FROM orders";
-            const result = await conn.query(sql);
+            const result = await conn.query(orderQueries.showOrders);
             conn.release();
             return result.rows;
         } catch (err) {
@@ -21,9 +21,10 @@ export class OrderStore {
     async create(userid: number): Promise<Order> {
         try {
             const conn = await client.connect();
-            const sql =
-                "INSERT INTO orders (userid,status) VALUES ($1,$2) RETURNING *";
-            const result = await conn.query(sql, [userid, "active"]);
+            const result = await conn.query(orderQueries.createOrder, [
+                userid,
+                "active"
+            ]);
             conn.release();
             return result.rows[0];
         } catch (err) {
@@ -34,8 +35,7 @@ export class OrderStore {
     async getOrder(orderid: number): Promise<Order> {
         try {
             const conn = await client.connect();
-            const sql = "SELECT * FROM orders WHERE id = $1";
-            const result = await conn.query(sql, [orderid]);
+            const result = await conn.query(orderQueries.showOrder, [orderid]);
             conn.release();
             return result.rows[0];
         } catch (err) {

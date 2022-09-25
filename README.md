@@ -30,9 +30,10 @@ GRANT ALL PRIVILEGES ON DATABASE "storefront_dev" TO ke7el;
 GRANT ALL PRIVILEGES ON DATABASE "storefront_test" TO ke7el;
 ```
 
-## Database port
+## Ports
 
-- 5432
+- Server - 3000
+- Database - 5432
 
 ## Testing
 

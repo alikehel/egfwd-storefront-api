@@ -2,28 +2,11 @@ import client from "../../database/database";
 import dotenv from "dotenv";
 import { Product } from "../../types/Product";
 import { ProductStore } from "../../models/product";
+import { products } from "../../data/data";
 
 dotenv.config();
 
 const productStore = new ProductStore();
-
-const products: Product[] = [
-    {
-        name: "samsung",
-        price: 5000,
-        category: "phones"
-    },
-    {
-        name: "iphone",
-        price: 15000,
-        category: "phones"
-    },
-    {
-        name: "acer",
-        price: 30000,
-        category: "laptops"
-    }
-];
 
 describe("product model", () => {
     beforeAll(async () => {

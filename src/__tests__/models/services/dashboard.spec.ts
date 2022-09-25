@@ -1,11 +1,10 @@
 import client from "../../../database/database";
 import dotenv from "dotenv";
-import { Product } from "../../../types/Product";
-import { User } from "../../../types/User";
 import { OrderStore } from "../../../models/order";
 import { UserStore } from "../../../models/user";
 import { DashboardStore } from "../../../models/services/dashboard";
 import { ProductStore } from "../../../models/product";
+import { users, products } from "../../../data/data";
 
 dotenv.config();
 
@@ -13,45 +12,6 @@ const productStore = new ProductStore();
 const userStore = new UserStore();
 const orderStore = new OrderStore();
 const dashboardStore = new DashboardStore();
-
-const users: User[] = [
-    {
-        username: "ke7el1username",
-        password: "ke7el1pass",
-        firstname: "ali1",
-        lastname: "kehel1"
-    },
-    {
-        username: "ke7el2username",
-        password: "ke7el2pass",
-        firstname: "ali2",
-        lastname: "kehel2"
-    },
-    {
-        username: "ke7el3username",
-        password: "ke7el3pass",
-        firstname: "ali3",
-        lastname: "kehel3"
-    }
-];
-
-const products: Product[] = [
-    {
-        name: "samsung",
-        price: 5000,
-        category: "phones"
-    },
-    {
-        name: "iphone",
-        price: 15000,
-        category: "phones"
-    },
-    {
-        name: "acer",
-        price: 30000,
-        category: "laptops"
-    }
-];
 
 describe("dashboard model", () => {
     beforeAll(async () => {

@@ -4,49 +4,12 @@ import dotenv from "dotenv";
 import supertest from "supertest";
 import app from "../../index";
 import client from "../../database/database";
-import { User } from "../../types/User";
-import { Order } from "../../types/Order";
+import { users, orders } from "../../data/data";
 
 dotenv.config();
 
 const userStore = new UserStore();
 const req = supertest(app);
-
-const users: User[] = [
-    {
-        username: "ke7el1username",
-        password: "ke7el1pass",
-        firstname: "ali1",
-        lastname: "kehel1"
-    },
-    {
-        username: "ke7el2username",
-        password: "ke7el2pass",
-        firstname: "ali2",
-        lastname: "kehel2"
-    },
-    {
-        username: "ke7el3username",
-        password: "ke7el3pass",
-        firstname: "ali3",
-        lastname: "kehel3"
-    }
-];
-
-const orders: Order[] = [
-    {
-        userid: 1,
-        status: "active"
-    },
-    {
-        userid: 2,
-        status: "active"
-    },
-    {
-        userid: 3,
-        status: "active"
-    }
-];
 
 describe("orders handlers", () => {
     beforeAll(async () => {
@@ -89,10 +52,17 @@ describe("orders handlers", () => {
 
     // app.post("/orders", isAutherized, create);
     it("should get 200 ok from POST /users/:userid/orders", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
         const res = await req.post("/users/1/orders").set(
             "Cookie",
             //jwt for 'ke7el2` + 'THISISSECRET'
-            `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+            // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+            `jwt=${token}`
         );
         expect(res.status).toEqual(200);
         expect(res.body).toEqual({
@@ -101,6 +71,22 @@ describe("orders handlers", () => {
                 ...orders[0]
             }
         });
+    });
+
+    it("should get 400 ERROR from POST /users/:userid/orders", async () => {
+        const { token } = (
+            await req
+                .post("/users")
+                .set("content-type", "application/json")
+                .send(JSON.stringify(users[1]))
+        ).body;
+        const res = await req.post("/users/1/orders").set(
+            "Cookie",
+            //jwt for 'ke7el2` + 'THISISSECRET'
+            // `jwt=eyJhbGciOiJIUzI1NiJ9.a2U3ZWwy.J32h2wSshKWYyc5KB4l-fAtT_OFSPPtHsyZg69IcjrY`
+            `jwt=${token}HAHAHAHA`
+        );
+        expect(res.status).toEqual(401);
     });
 
     // app.get("/orders/:orderid", showOrder);

@@ -2,12 +2,11 @@ import express, { Request, Response } from "express";
 import { UserStore } from "../models/user";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { SECRET } from "../config/config";
 
 const userStore = new UserStore();
 
 dotenv.config();
-
-const SECRET = process.env.SECRET;
 
 const index = async (_req: Request, res: Response) => {
     try {
@@ -25,7 +24,7 @@ const create = async (req: Request, res: Response) => {
         const user = req.body;
         const result = await userStore.create(user);
         const token = jwt.sign(user.username, SECRET as string);
-        res.cookie("jwt", token);
+        res.cookie("jwt", token, { httpOnly: true, secure: true });
         // res.setHeader("Authorization", `Bearer ${token}`);
         // console.log(user);
         res.json({ result: result, token: token });
@@ -41,7 +40,7 @@ const authenticate = async (req: Request, res: Response) => {
         const user = req.body;
         const result = await userStore.authenticate(user);
         const token = jwt.sign(user.username, SECRET as string);
-        res.cookie("jwt", token);
+        res.cookie("jwt", token, { httpOnly: true, secure: true });
         // res.setHeader("Authorization", `Bearer ${token}`);
         // console.log(user);
         res.json({ result, token });

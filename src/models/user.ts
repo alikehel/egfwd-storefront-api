@@ -2,18 +2,17 @@ import client from "../database/database";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import { User } from "../types/User";
+import { userQueries } from "../database/queries";
+import { SECRET } from "../config/config";
 
 dotenv.config();
-
-const SECRET = process.env.SECRET;
 
 //CRUD
 export class UserStore {
     async index(): Promise<User[]> {
         try {
             const conn = await client.connect();
-            const sql = "SELECT * FROM users";
-            const result = await conn.query(sql);
+            const result = await conn.query(userQueries.showUsers);
             conn.release();
             return result.rows;
         } catch (err) {
@@ -28,9 +27,7 @@ export class UserStore {
                 12
             );
             const conn = await client.connect();
-            const sql =
-                "INSERT INTO users (username,password,firstname,lastname) VALUES ($1,$2,$3,$4) RETURNING *";
-            const result = await conn.query(sql, [
+            const result = await conn.query(userQueries.createUser, [
                 user.username,
                 hash,
                 user.firstname,
@@ -46,8 +43,9 @@ export class UserStore {
     async authenticate(user: User): Promise<boolean> {
         try {
             const conn = await client.connect();
-            const sql = "SELECT password FROM users WHERE username=$1";
-            const result = await conn.query(sql, [user.username]);
+            const result = await conn.query(userQueries.authenticateUser, [
+                user.username
+            ]);
             const password = result.rows[0].password;
             const isAuthenticated = bcrypt.compareSync(
                 user.password + (SECRET as string),
@@ -63,8 +61,7 @@ export class UserStore {
     async showUser(username: string): Promise<User> {
         try {
             const con = await client.connect();
-            const sql = "SELECT * FROM users WHERE username=$1";
-            const result = await con.query(sql, [username]);
+            const result = await con.query(userQueries.showUser, [username]);
             return result.rows[0];
         } catch (err) {
             throw new Error(`cannot get the user. ${err}`);
